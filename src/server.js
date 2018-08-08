@@ -16,8 +16,7 @@ app.use((req, res, next)=>{
 })
 
 app.use(function(req, res, next){
-  res.setTimeout(3000, function(){
-    console.log('ok')
+  res.setTimeout(2000, function(){
     next()
   })
 })
@@ -28,10 +27,36 @@ app.get('/ping', function (req, res) {
 })
 
 app.get('/movies', function (req, res) {
-  res.send(monJson)
+  const filteredMovies = monJson.map(({id, title, poster})=> {
+    return {id, title, poster}
+  })
+  res.send(filteredMovies)
+})
+
+app.get('/movies/:id', function (req, res) {
+  var id = req.params.id
+  const detail = monJson.find(movie => {
+    return movie.id == id
+  })
+  res.send(detail)
 })
 
 app.listen(5000, function () {
   console.log('Example app listening on port 5000!')
 })
 
+// const filteredMovies = movies.map(movie =>{
+//     return{
+//         id: id,
+//         title: movie.title,
+//         poster: movie.poster
+//     }
+// })
+
+// const filteredMovies = movies.map(({id, title, poster})=>{
+//     return {id, title, poster}
+// })
+
+// const movie = movies.find(movie => {
+//   return movie.title === 'film2'
+// })
