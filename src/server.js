@@ -15,6 +15,8 @@ app.use((req, res, next)=>{
   next()
 })
 
+app.use(express.static('src/assets'));
+
 app.use(function(req, res, next){
   res.setTimeout(2000, function(){
     next()
