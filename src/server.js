@@ -43,24 +43,40 @@ app.get('/movies/:id', function (req, res) {
 })
 
 app.post('/form', function (req,res){
+
+function validateField(field, msg){
+  if (!field || field.trim().length ===0){
+    errors.push(msg)
+  }
+}
+
   var title = req.body.title;
   var poster = req.body.poster;
   var desc = req.body.desc;
   var long = Math.max.apply(Math,monJson.map(function(o){return o.id;})) +1
   console.log(long)
 
-  var newMovie = {
-    "id": long,
-    "title": title,
-    "poster": poster,
-    "desc": desc
-  }
+  const errors = []
+  validateField(title, 'Titre obligatoire')
+  validateField(poster, 'Url obligatoire')
+  validateField(desc, 'Resumé obligatoire')
+  console.log("salut")
 
-  monJson.push(newMovie)
-  fs.writeFile('movies.json', JSON.stringify(monJson));
+  if (errors.length > 0) return res.status(400).send(errors) 
+console.log('après validation');
 
-  console.log("Title = "+title+", poster "+poster+ ", desc " +desc);
-  res.end("yes");
+    var newMovie = {
+      "id": long,
+      "title": title,
+      "poster": poster,
+      "desc": desc
+    }
+  
+    monJson.push(newMovie)
+    fs.writeFile('movies.json', JSON.stringify(monJson));
+  
+    console.log("Title = "+title+", poster "+poster+ ", desc " +desc);
+    res.end("yes");
 })
 
 app.listen(5000, function () {
